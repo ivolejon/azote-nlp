@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ivo Rocks</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
+
+</head>
+<body>
+    <div class="container" id="app">
+      
+        <div class="row">
+          <div class="col-6 p-3" style="background-color:azure">
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">Engelsk text</label>
+                <textarea class="form-control" v-model="inputText" rows="8" id="exampleFormControlTextarea1" rows="3"></textarea>
+              </div>
+              <button type="button" class="btn btn-primary float-right" @click="post">Hämta viktiga ord</button>
+          </div>
+          <div class="col-6 p-2" style="background-color:lightgoldenrodyellow">
+
+            <div class="form-group">
+                <label>Viktiga fraser/ord <span v-if="loading">Laddar...</span></label>
+          </div>
+          <span v-for="word in words" class="badge p-3 m-3 badge-pill badge-info">${word.text}</span>
+        </div>
+        </div>
+    </div>
+    <script>
+        var app = new Vue({
+        delimiters: ['${', '}'],
+          el: '#app',
+          data: {
+            message: 'Hello Vue!',
+            text:"ivo",
+            inputText:"Cod fishing in the Baltic Sea is stopped in a new EU decision",
+            words:[],
+            loading:false
+          },
+          methods:{
+              post : function(){
+                  this.loading = true
+                  var self = this
+                $.post( "/keywords", { input_text: this.inputText })
+                .done(function( data ) {
+                  self.words = data
+                  self.loading = false
+                });
+              }
+          }
+        })
+      </script>
+   
+</body>
+</html>
